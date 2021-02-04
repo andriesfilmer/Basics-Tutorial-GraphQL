@@ -1,8 +1,8 @@
 # Basics Tutorial GraphQL
 
-Done the tutorial on: <https://www.howtographql.com/graphql-js/1-getting-started/>
+I saved the code from tutorial on: <https://www.howtographql.com/graphql-js/1-getting-started/>
 
-I will use this as a reference for further programming with GraphQL.
+So I can use this as a reference for further programming with GraphQL.
 
 ## Install
 
@@ -26,55 +26,40 @@ Run prisma studio
 
     query { info }
 
-First do a signup mutation
-
     query {
       user { id name }
     }
 
-### Filters
-
-    query {
-      feed(filter: "QL") {
-        id
-        description
-        url
-        postedBy {
-          id
-          name
-        }
-      }
-    }
-
-### Pagination
-
-    query {
-      feed(take: 1, skip: 1) {
-        id
-        description
-        url
-      }
-    }
-
-### Sorting
+### With count and orderBy
 
     query {
       feed(orderBy: { createdAt: asc }) {
-        id
-        description
-        url
-      }
-    }
-
-### Counting
-
-    query {
-      feed {
         count
         links {
           id
           description
           url
+        }
+      }
+    }
+
+With `curl`
+
+    curl 'http://localhost:4000/' -H 'Content-Type: application/json' \
+    --data-binary '{"query":"query{feed(orderBy:{createdAt:asc}){count links{id description url}}}"}'
+
+### With filter and postedBy
+
+    query {
+      feed(filter: "an", take: 2, skip: 1) {
+        links {
+          id
+          description
+          url
+          postedBy {
+            id
+            name
+          }
         }
       }
     }
@@ -88,7 +73,7 @@ First do a signup mutation
     }
 
     mutation {
-      signup(name: "Alice", email: "alice@prisma.io", password: "graphql") {
+      signup(name: "Alice", email: "andries@filmer.nl", password: "graphql") {
         token
         user {
           id
@@ -99,8 +84,8 @@ First do a signup mutation
 
 ## Authentication
 
-When using the **signup mutation** look at the response `bearer` token.
-Copy this __TOKEN__ to HTTP HEADERS in the browser when running the server <http://localhost:4000/>
+When using the **signup mutation** or **login mutation** look at the response `bearer` token.
+Copy this ____TOKEN____ to HTTP HEADERS in the browser when running the server <http://localhost:4000/>
 
     {
       "Authorization": "Bearer __TOKEN__"
@@ -109,7 +94,7 @@ Copy this __TOKEN__ to HTTP HEADERS in the browser when running the server <http
 ### Login
 
     mutation {
-      login(email: "alice@prisma.io", password: "graphql") {
+      login(email: "andries@filmer.nl", password: "graphql") {
         token
         user {
           email
